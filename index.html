@@ -8,8 +8,13 @@
 </head>
 <body>
     <header>
-        <h1>Welcome to Study Helper</h1>
-        <nav>
+        <h1>Study Helper</h1>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <nav id="navbar">
             <ul>
                 <li><a href="index.html">Home</a></li>
                 <li><a href="notes.html">Notes</a></li>
@@ -44,6 +49,14 @@
     <footer>
         <p>&copy; 2025 Study Helper. All rights reserved.</p>
     </footer>
+
+    <script>
+        const menu = document.getElementById('mobile-menu');
+        const nav = document.getElementById('navbar');
+
+        menu.addEventListener('click', () => {
+            nav.classList.toggle('active');
+        });
+    </script>
 </body>
 </html>
-z
