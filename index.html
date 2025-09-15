@@ -3,60 +3,57 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Study Helper</title>
+    <title>Study Helper - Home</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
     <header>
-        <h1>Study Helper</h1>
-        <div class="menu-toggle" id="mobile-menu">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
+        <div class="container">
+            <h1>Study Helper</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="notes.html">Notes</a></li>
+                    <li><a href="pyq.html">PYQ</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-        <nav id="navbar">
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="notes.html">Notes</a></li>
-                <li><a href="pyq.html">PYQ</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main>
+    <main class="container">
         <section>
             <h2>Your One-Stop Platform for Exam Preparation</h2>
-            <p>Study Helper provides notes, previous year questions (PYQs), and much more to help you prepare effectively for your exams.</p>
+            <p>Study Helper provides notes, previous year questions (PYQs), and much more to help you prepare effectively for your exams. Everything you need is just a click away!</p>
         </section>
 
         <section>
-            <h3>Explore Our Features</h3>
-            <ul>
-                <li><strong>Notes:</strong> Carefully prepared notes for different subjects.</li>
-                <li><strong>Previous Year Questions:</strong> Practice with real exam questions.</li>
-                <li><strong>Contact Support:</strong> Get in touch anytime for help and feedback.</li>
-            </ul>
+            <h3>Features</h3>
+            <div class="features">
+                <div>
+                    <h4>Notes</h4>
+                    <p>Access carefully prepared notes across various subjects to improve your understanding.</p>
+                </div>
+                <div>
+                    <h4>Previous Year Questions</h4>
+                    <p>Practice with real exam questions to build confidence and test your knowledge.</p>
+                </div>
+                <div>
+                    <h4>Contact Support</h4>
+                    <p>Get in touch for assistance, feedback, or suggestions to improve your study experience.</p>
+                </div>
+            </div>
         </section>
 
         <section>
-            <h3>Get Started</h3>
-            <p>Use the navigation above to explore notes, PYQs, and contact us for further assistance. We are here to help you succeed!</p>
+            <h3>Get Started Now</h3>
+            <p>Navigate through the sections above to start learning. We're committed to helping you succeed!</p>
         </section>
     </main>
 
     <footer>
         <p>&copy; 2025 Study Helper. All rights reserved.</p>
     </footer>
-
-    <script>
-        const menu = document.getElementById('mobile-menu');
-        const nav = document.getElementById('navbar');
-
-        menu.addEventListener('click', () => {
-            nav.classList.toggle('active');
-        });
-    </script>
 </body>
 </html>

@@ -1,73 +1,111 @@
-/* General body styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
 }
 
 header {
-    background-color: #009688;
+    background-color: #004aad;
     color: white;
-    padding: 15px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 15px 0;
 }
 
 header h1 {
+    text-align: center;
     margin: 0;
 }
 
 nav ul {
     list-style: none;
+    text-align: center;
     padding: 0;
-    margin: 0;
-    display: flex;
 }
 
 nav ul li {
-    margin-left: 20px;
+    display: inline-block;
+    margin: 0 15px;
 }
 
 nav ul li a {
     color: white;
     text-decoration: none;
     font-weight: bold;
+    padding: 8px 12px;
 }
 
-/* Hamburger menu styling */
-.menu-toggle {
-    display: none;
-    flex-direction: column;
+nav ul li a.active,
+nav ul li a:hover {
+    background-color: #003377;
+    border-radius: 4px;
+}
+
+main {
+    padding: 20px 0;
+}
+
+.features {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.features div {
+    background-color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    flex: 1;
+    min-width: 250px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+input[type="file"],
+button {
+    padding: 10px;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #004aad;
+    color: white;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
 }
 
-.menu-toggle .bar {
-    height: 3px;
-    width: 25px;
-    background-color: white;
-    margin: 4px 0;
-    transition: 0.3s;
+button:hover {
+    background-color: #003377;
 }
 
-/* Mobile view */
-@media (max-width: 768px) {
-    .menu-toggle {
-        display: flex;
-    }
-    nav {
-        display: none;
-        width: 100%;
-        background-color: #00796B;
-    }
-    nav.active {
-        display: block;
-    }
-    nav ul {
-        flex-direction: column;
-    }
-    nav ul li {
-        margin: 10px 0;
-        text-align: center;
-    }
+ul {
+    padding-left: 20px;
+}
+
+footer {
+    background-color: #004aad;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.form-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.1);
 }

@@ -3,33 +3,69 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>StudyHelper - Notes</title>
+    <title>Study Helper - Notes</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
     <header>
-        <h1>StudyHelper</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="notes.html">Notes</a>
-            <a href="pyq.html">PYQ</a>
-            <a href="about.html">About</a>
-            <a href="contact.html">Contact</a>
-        </nav>
+        <div class="container">
+            <h1>Study Helper</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="notes.html" class="active">Notes</a></li>
+                    <li><a href="pyq.html">PYQ</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
+    <main class="container">
         <h2>Notes</h2>
-        <ul>
-            <li><a href="/pdfs/Complete_Python_Programming_Notes_Handwritten.pdf" target="_blank">Download PDF</a>
-</li>
-            <li><a href="assets/notes/physics.pdf" target="_blank">Physics Notes</a></li>
-            <!-- Add more notes here -->
+        <h3>Upload Your Notes (PDF)</h3>
+        <form id="pdfUploadForm" enctype="multipart/form-data">
+            <input type="file" id="pdfFile" accept="application/pdf" required />
+            <button type="submit">Upload PDF</button>
+        </form>
+        <div id="uploadStatus"></div>
+
+        <h3>Available Notes</h3>
+        <ul id="notesList">
+            <!-- Notes will be listed here -->
         </ul>
     </main>
 
     <footer>
-        <p>&copy; 2025 StudyHelper</p>
+        <p>&copy; 2025 Study Helper. All rights reserved.</p>
     </footer>
+
+    <script>
+        const form = document.getElementById('pdfUploadForm');
+        const fileInput = document.getElementById('pdfFile');
+        const statusDiv = document.getElementById('uploadStatus');
+
+        const ADMIN_PASSWORD = "admin123";
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const enteredPassword = prompt("Enter admin password to upload:");
+            if (enteredPassword !== ADMIN_PASSWORD) {
+                alert("Incorrect password! Only admin can upload.");
+                return;
+            }
+            const file = fileInput.files[0];
+            if (!file) {
+                statusDiv.textContent = "Please select a PDF file.";
+                return;
+            }
+            statusDiv.textContent = "Uploading...";
+            // Upload logic to be handled by backend here
+            setTimeout(() => {
+                statusDiv.textContent = "PDF uploaded successfully!";
+            }, 1000);
+        });
+    </script>
 </body>
 </html>

@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Contact Us</title>
+    <title>Study Helper - Contact</title>
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
     <header>
-        <h1>Contact Us</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="notes.html">Notes</a></li>
-                <li><a href="pyq.html">PYQ</a></li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </nav>
+        <div class="container">
+            <h1>Study Helper</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="notes.html">Notes</a></li>
+                    <li><a href="pyq.html">PYQ</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html" class="active">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
     </header>
 
-    <main>
-        <h2>Get in touch</h2>
-        <p>Please fill out this form to contact us:</p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdXUDAHUMX24_oyv_4v_ZmqHHnQQ-7dg-tcvRX2OfqxRGs9zg/viewform?usp=dialog" target="_blank">Open Contact Form</a>
+    <main class="container">
+        <h2>Contact Us</h2>
+        <p>If you have any questions, suggestions, or feedback, feel free to reach out to us by filling the form below.</p>
+        
+        <div class="form-container">
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdXUDAHUMX24_oyv_4v_ZmqHHnQQ-7dg-tcvRX2OfqxRGs9zg/viewform?embedded=true" width="100%" height="600" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+        </div>
     </main>
+
+    <footer>
+        <p>&copy; 2025 Study Helper. All rights reserved.</p>
+    </footer>
 </body>
 </html>
