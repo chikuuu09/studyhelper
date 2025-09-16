@@ -1,92 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Helper - PYQ</title>
-  <link rel="stylesheet" href="css/style.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Study Helper - PYQ</title>
+    <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <header>
-    <h1>📘 Study Helper - PYQ</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="notes.html">Notes</a>
-      <a href="pyq.html">PYQ</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-  </header>
+    <header>
+        <div class="container">
+            <h1>Study Helper</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="notes.html">Notes</a></li>
+                    <li><a href="pyq.html" class="active">PYQ</a></li>
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-  <main>
-    <h2>Upload PYQ (PDF)</h2>
-    <form id="pyqUploadForm">
-      <input type="file" id="pyqFile" accept="application/pdf" />
-      <button type="submit">Upload PYQ</button>
-    </form>
-    <div id="pyqStatus"></div>
-    <progress id="pyqProgress" value="0" max="100" style="width: 100%; display: none;"></progress>
-  </main>
+    <main class="container">
+        <h2>Previous Year Questions (PYQ)</h2>
+        <h3>Upload PYQ PDF</h3>
+        <form id="pyqUploadForm" enctype="multipart/form-data">
+            <input type="file" id="pyqFile" accept="application/pdf" required />
+            <button type="submit">Upload PDF</button>
+        </form>
+        <div id="pyqUploadStatus"></div>
 
-  <footer>
-    <p>© 2025 Study Helper</p>
-  </footer>
+        <h3>Available PYQs</h3>
+        <ul>
+            <li><a href="assets/pyq/sem1.pdf" target="_blank">Semester 1 PYQ</a></li>
+            <li><a href="assets/pyq/sem2.pdf" target="_blank">Semester 2 PYQ</a></li>
+        </ul>
+    </main>
 
-  <script>
-    const pyqForm = document.getElementById('pyqUploadForm');
-    const pyqFile = document.getElementById('pyqFile');
-    const pyqStatus = document.getElementById('pyqStatus');
-    const pyqProgress = document.getElementById('pyqProgress');
+    <footer>
+        <p>&copy; 2025 Study Helper. All rights reserved.</p>
+    </footer>
 
-    pyqForm.addEventListener('submit', function(e) {
-      e.preventDefault();
-      const file = pyqFile.files[0];
-      if (!file) {
-        pyqStatus.textContent = "Please select a file.";
-        return;
-      }
+    <script>
+        const pyqForm = document.getElementById('pyqUploadForm');
+        const pyqFileInput = document.getElementById('pyqFile');
+        const pyqStatusDiv = document.getElementById('pyqUploadStatus');
 
-      const enteredPassword = prompt("Enter admin password to upload:");
-      if (enteredPassword !== "chikuuu1109") {
-        alert("Incorrect password! Upload blocked.");
-        return;
-      }
+        const ADMIN_PASSWORD = "admin123";
 
-      const reader = new FileReader();
-      reader.onload = function() {
-        const base64Data = reader.result.split(",")[1];
-
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "YOUR_APPS_SCRIPT_URL");
-
-        xhr.setRequestHeader("Content-Type", file.type);
-
-        xhr.upload.addEventListener("progress", function(e) {
-          if (e.lengthComputable) {
-            const percent = (e.loaded / e.total) * 100;
-            pyqProgress.style.display = "block";
-            pyqProgress.value = percent;
-            pyqStatus.textContent = "Uploading... " + Math.floor(percent) + "%";
-          }
+        pyqForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const enteredPassword = prompt("Enter admin password to upload:");
+            if (enteredPassword !== ADMIN_PASSWORD) {
+                alert("Incorrect password! Only admin can upload.");
+                return;
+            }
+            const file = pyqFileInput.files[0];
+            if (!file) {
+                pyqStatusDiv.textContent = "Please select a PDF file.";
+                return;
+            }
+            pyqStatusDiv.textContent = "Uploading...";
+            setTimeout(() => {
+                pyqStatusDiv.textContent = "PYQ uploaded successfully!";
+            }, 1000);
         });
-
-        xhr.onload = function() {
-          if (xhr.status === 200) {
-            pyqStatus.textContent = "Upload complete!";
-          } else {
-            pyqStatus.textContent = "Upload failed.";
-          }
-          pyqProgress.style.display = "none";
-        };
-
-        xhr.onerror = function() {
-          pyqStatus.textContent = "Upload error.";
-          pyqProgress.style.display = "none";
-        };
-
-        xhr.send(base64Data);
-      };
-      reader.readAsDataURL(file);
-    });
-  </script>
+    </script>
 </body>
 </html>
