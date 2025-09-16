@@ -1,71 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Study Helper - Notes</title>
-    <link rel="stylesheet" href="css/style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Helper - Notes</title>
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Study Helper</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="notes.html" class="active">Notes</a></li>
-                    <li><a href="pyq.html">PYQ</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <header>
+    <h1>📘 Study Helper - Notes</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="notes.html">Notes</a>
+      <a href="pyq.html">PYQ</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
 
-    <main class="container">
-        <h2>Notes</h2>
-        <h3>Upload Your Notes (PDF)</h3>
-        <form id="pdfUploadForm" enctype="multipart/form-data">
-            <input type="file" id="pdfFile" accept="application/pdf" required />
-            <button type="submit">Upload PDF</button>
-        </form>
-        <div id="uploadStatus"></div>
+  <main>
+    <h2>Upload Notes (PDF)</h2>
+    <form id="notesUploadForm">
+      <input type="file" id="notesFile" accept="application/pdf" />
+      <button type="submit">Upload Notes</button>
+    </form>
+    <div id="notesStatus"></div>
+    <progress id="notesProgress" value="0" max="100" style="width: 100%; display: none;"></progress>
+  </main>
 
-        <h3>Available Notes</h3>
-        <ul id="notesList">
-            <!-- Notes will be listed here -->
-        </ul>
-    </main>
+  <footer>
+    <p>© 2025 Study Helper</p>
+  </footer>
 
-    <footer>
-        <p>&copy; 2025 Study Helper. All rights reserved.</p>
-    </footer>
+  <script>
+    const notesForm = document.getElementById('notesUploadForm');
+    const notesFile = document.getElementById('notesFile');
+    const notesStatus = document.getElementById('notesStatus');
+    const notesProgress = document.getElementById('notesProgress');
 
-    <script>
-        const form = document.getElementById('pdfUploadForm');
-        const fileInput = document.getElementById('pdfFile');
-        const statusDiv = document.getElementById('uploadStatus');
+    notesForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const file = notesFile.files[0];
+      if (!file) {
+        notesStatus.textContent = "Please select a file.";
+        return;
+      }
 
-        const ADMIN_PASSWORD = "chikuuu1109";
+      const enteredPassword = prompt("Enter admin password to upload:");
+      if (enteredPassword !== "chikuuu1109") {
+        alert("Incorrect password! Upload blocked.");
+        return;
+      }
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const enteredPassword = prompt("Enter admin password to upload:");
-            if (enteredPassword !== ADMIN_PASSWORD) {
-                alert("Incorrect password! Only admin can upload.");
-                return;
-            }
-            const file = fileInput.files[0];
-            if (!file) {
-                statusDiv.textContent = "Please select a PDF file.";
-                return;
-            }
-            statusDiv.textContent = "Uploading...";
-            // Upload logic to be handled by backend here
-            setTimeout(() => {
-                statusDiv.textContent = "PDF uploaded successfully!";
-            }, 1000);
+      const reader = new FileReader();
+      reader.onload = function() {
+        const base64Data = reader.result.split(",")[1];
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "YOUR_APPS_SCRIPT_URL");
+
+        xhr.setRequestHeader("Content-Type", file.type);
+
+        xhr.upload.addEventListener("progress", function(e) {
+          if (e.lengthComputable) {
+            const percent = (e.loaded / e.total) * 100;
+            notesProgress.style.display = "block";
+            notesProgress.value = percent;
+            notesStatus.textContent = "Uploading... " + Math.floor(percent) + "%";
+          }
         });
-    </script>
+
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            notesStatus.textContent = "Upload complete!";
+          } else {
+            notesStatus.textContent = "Upload failed.";
+          }
+          notesProgress.style.display = "none";
+        };
+
+        xhr.onerror = function() {
+          notesStatus.textContent = "Upload error.";
+          notesProgress.style.display = "none";
+        };
+
+        xhr.send(base64Data);
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
 </body>
 </html>
