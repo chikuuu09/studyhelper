@@ -45,8 +45,10 @@
         const form = document.getElementById('pdfUploadForm');
         const fileInput = document.getElementById('pdfFile');
         const statusDiv = document.getElementById('uploadStatus');
+        const notesList = document.getElementById('notesList');
 
         const ADMIN_PASSWORD = "admin123";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw5IXMT3p8cSHiRYMMK0GWTNwf59h4Xgkw-RsHwgxwu4GVUW_qXf-5W6H92nVtvHeMqGw/exec";
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -61,11 +63,38 @@
                 return;
             }
             statusDiv.textContent = "Uploading...";
-            // Upload logic to be handled by backend here
-            setTimeout(() => {
-                statusDiv.textContent = "PDF uploaded successfully!";
-            }, 1000);
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                const base64Data = evt.target.result.split(",")[1];
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `name=${encodeURIComponent(file.name)}&mimeType=${encodeURIComponent(file.type)}&file=${encodeURIComponent(base64Data)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        statusDiv.innerHTML = `File uploaded successfully! <a href="${data.url}" target="_blank">View PDF</a>`;
+                        addNote(file.name, data.url);
+                    } else {
+                        statusDiv.textContent = "Upload failed: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    statusDiv.textContent = "Upload error occurred.";
+                    console.error(error);
+                });
+            };
+            reader.readAsDataURL(file);
         });
+
+        function addNote(name, url) {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+            notesList.appendChild(li);
+        }
     </script>
 </body>
 </html>
