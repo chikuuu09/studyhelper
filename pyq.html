@@ -66,3 +66,37 @@
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const base64Data = evt.target
+                                .split(",")[1];
+                fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `name=${encodeURIComponent(file.name)}&mimeType=${encodeURIComponent(file.type)}&file=${encodeURIComponent(base64Data)}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.status === "success") {
+                        pyqStatusDiv.innerHTML = `PYQ uploaded successfully! <a href="${data.url}" target="_blank">View PDF</a>`;
+                        addPYQ(file.name, data.url);
+                    } else {
+                        pyqStatusDiv.textContent = "Upload failed: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    pyqStatusDiv.textContent = "Upload error occurred.";
+                    console.error(error);
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function addPYQ(name, url) {
+            const li = document.createElement('li');
+            li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+            pyqList.appendChild(li);
+        }
+    </script>
+</body>
+</html>
+
