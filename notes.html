@@ -7,101 +7,99 @@
     <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>Study Helper</h1>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="notes.html" class="active">Notes</a></li>
-                    <li><a href="pyq.html">PYQ</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+<header>
+    <div class="container">
+        <h1>Study Helper</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="notes.html" class="active">Notes</a></li>
+                <li><a href="pyq.html">PYQ</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-    <main class="container">
-        <h2>Notes</h2>
-        <h3>Upload Your Notes (PDF)</h3>
-        <form id="pdfUploadForm" enctype="multipart/form-data">
-            <input type="file" id="pdfFile" accept="application/pdf" required />
-            <button type="submit">Upload PDF</button>
-        </form>
-        <div id="uploadStatus"></div>
+<main class="container">
+    <h2>Notes</h2>
+    <h3>Upload Your Notes (PDF)</h3>
+    <form id="pdfUploadForm" enctype="multipart/form-data">
+        <input type="file" id="pdfFile" accept="application/pdf" required />
+        <button type="submit">Upload PDF</button>
+    </form>
+    <div id="uploadStatus"></div>
 
-        <h3>Available Notes</h3>
-        <ul id="notesList">
-            <!-- Notes will be listed here -->
-        </ul>
-    </main>
+    <h3>Available Notes</h3>
+    <ul id="notesList"></ul>
+</main>
 
-    <footer>
-        <p>&copy; 2025 Study Helper. All rights reserved.</p>
-    </footer>
+<footer>
+    <p>&copy; 2025 Study Helper. All rights reserved.</p>
+</footer>
 
-    <script>
-        const form = document.getElementById('pdfUploadForm');
-        const fileInput = document.getElementById('pdfFile');
-        const statusDiv = document.getElementById('uploadStatus');
-        const notesList = document.getElementById('notesList');
+<script>
+const WEB_APP_URL = "YOUR_NEW_WEB_APP_URL"; // yahan apna URL daalo
+const ADMIN_PASSWORD = "admin123";
 
-        const ADMIN_PASSWORD = "admin123";
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw5IXMT3p8cSHiRYMMK0GWTNwf59h4Xgkw-RsHwgxwu4GVUW_qXf-5W6H92nVtvHeMqGw/exec";
+const form = document.getElementById('pdfUploadForm');
+const fileInput = document.getElementById('pdfFile');
+const statusDiv = document.getElementById('uploadStatus');
+const notesList = document.getElementById('notesList');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const enteredPassword = prompt("Enter admin password to upload:");
-            if (enteredPassword !== ADMIN_PASSWORD) {
-                alert("Incorrect password! Only admin can upload.");
-                return;
+// Upload file
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const enteredPassword = prompt("Enter admin password to upload:");
+    if (enteredPassword !== ADMIN_PASSWORD) return alert("Incorrect password!");
+
+    const file = fileInput.files[0];
+    if (!file) return statusDiv.textContent = "Please select a PDF file.";
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        const blob = new Blob([evt.target.result], {type: file.type});
+        const formData = new FormData();
+        formData.append("fileBlob", evt.target.result.split(",")[1]); // Base64
+        formData.append("name", file.name);
+        formData.append("mimeType", file.type);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", WEB_APP_URL);
+
+        xhr.upload.addEventListener("progress", (e) => {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                statusDiv.textContent = `Uploading... ${percent}%`;
             }
-            const file = fileInput.files[0];
-            if (!file) {
-                statusDiv.textContent = "Please select a PDF file.";
-                return;
-            }
-            statusDiv.textContent = "Uploading... 0%";
-
-            const reader = new FileReader();
-            reader.onload = function(evt) {
-                const base64Data = evt.target.result.split(",")[1];
-                const xhr = new XMLHttpRequest();
-                xhr.open("POST", WEB_APP_URL);
-                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                xhr.upload.addEventListener("progress", (e) => {
-                    if(e.lengthComputable) {
-                        const percent = Math.round((e.loaded / e.total) * 100);
-                        statusDiv.textContent = `Uploading... ${percent}%`;
-                    }
-                });
-
-                xhr.onload = function() {
-                    if(xhr.status === 200) {
-                        const data = JSON.parse(xhr.responseText);
-                        if(data.status === "success") {
-                            statusDiv.innerHTML = `File uploaded successfully! <a href="${data.url}" target="_blank">View PDF</a>`;
-                            addNote(file.name, data.url);
-                        } else {
-                            statusDiv.textContent = "Upload failed: " + data.message;
-                        }
-                    } else {
-                        statusDiv.textContent = "Upload error occurred.";
-                    }
-                };
-
-                xhr.send(`name=${encodeURIComponent(file.name)}&mimeType=${encodeURIComponent(file.type)}&file=${encodeURIComponent(base64Data)}`);
-            };
-            reader.readAsDataURL(file);
         });
 
-        function addNote(name, url) {
-            const li = document.createElement('li');
-            li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
-            notesList.appendChild(li);
-        }
-    </script>
+        xhr.onload = () => {
+            const data = JSON.parse(xhr.responseText);
+            if (data.status === "success") {
+                statusDiv.innerHTML = `Uploaded! <a href="${data.url}" target="_blank">View PDF</a>`;
+                addNote(file.name, data.url);
+            } else statusDiv.textContent = "Upload failed: " + data.message;
+        };
+        xhr.send(formData);
+    };
+    reader.readAsDataURL(file);
+});
+
+// Add note to list
+function addNote(name, url) {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+    notesList.appendChild(li);
+}
+
+// Fetch existing notes on load
+window.addEventListener('load', async () => {
+    const res = await fetch(WEB_APP_URL + "?action=listNotes");
+    const data = await res.json();
+    data.forEach(file => addNote(file.name, file.url));
+});
+</script>
 </body>
 </html>
